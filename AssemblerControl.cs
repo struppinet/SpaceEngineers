@@ -17,7 +17,7 @@ public void Save()
 public void Main(string argument, UpdateType updateSource)
 
 {
-
+    // Assembler Control:
     var chest = GridTerminalSystem.GetBlockWithName("Large Cargo Container Ref");
 
             Dictionary<String,float> consolidated = new Dictionary<String,float>();
@@ -34,21 +34,22 @@ public void Main(string argument, UpdateType updateSource)
                 }
                 Echo(itemName + ": " + amount);
 
-                var heavy = 1;
-                if (itemName == "SteelPlate" || itemName == "Construction" || itemName == "Computer" || itemName == "SmallTube") {
-                    heavy = 0;
-                }
-
                 var assembler = GridTerminalSystem.GetBlockWithName("Assembler "+itemName);
                 if (assembler != null) {
-                    if (  heavy == 0 && amount > 6000) {
-                        assembler.ApplyAction ("OnOff_Off");
-                    } else if ( heavy == 1 && amount > 2000) {
+                    var prodAmount = 2000;
+                    switch (itemName) {
+                        case "SteelPlate": prodAmount = 20000; break;
+                        case "Construction": prodAmount = 20000; break;
+                        case "Computer": prodAmount = 20000; break;
+                        case "SmallTube": prodAmount = 20000; break;
+                    }
+                    if ( amount > prodAmount) {
                         assembler.ApplyAction ("OnOff_Off");
                     } else {
                         assembler.ApplyAction ("OnOff_On");
                     }
+                } else { 
+                    Echo("No Assembler for: " + itemName);
                 }
             } 
 }
-
